@@ -113,10 +113,30 @@
     },
 
     mounted(){
-      this.axios.post("http://api.komavideo.com/news/list").then(body => {
-        console.log(body, '!@#$~')
-        this.content = body.data;
-      })
+      // this.axios.post("http://api.komavideo.com/news/list").then(body => {
+      //   console.log(body, '!@#$~')
+      //   this.content = body.data;
+      // })
+      // this.axios.post('http://api.komavideo.com/news/list'
+      //     // pageSize: '',
+      //     // pageIndex: '',
+      //     // pageIndex: '',
+      //     ).then(function (response) {
+      //       console.log(response);
+      //     }).catch(function (error) {
+      //       console.log(error);
+      //     }); 
+      this.axios.get('http://localhost:3003/news',{
+                      params: {
+                        token: '~!@#$%^&*()'
+                      }
+                    })
+                    .then(function(response){
+                      console.log(response);
+                    })
+                    .catch(function(error){
+                      console.log(error);
+                    });
     }
   }
 

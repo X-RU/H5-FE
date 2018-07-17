@@ -6,15 +6,13 @@
     <group label-width="4.5em" label-margin-right="2em" label-align="center">
       <div id="test">
         <div class="img-container">
-          <img :src="mySrc" />
+          <img :src="mySrc" style="width: 100%; height=width; border-radius: 10%" />
         </div>
         <input id="file" type="file" @change="getFile" ref="file"/>
-        <div style="padding: 1em; border-style: solid; border-width: 1em">
-          <label for="file" style="width: 100%">选择新头像</label>
-        </div>
+        <label for="file" style="margin: 1em; border-style: solid; border-width: 0.1em;">选择新头像</label>
       </div>
 
-      <x-input title="昵称" placeholder="请输入昵称" v-model="subject"></x-input>
+      <x-input style="margin-top: 1em" title="昵称" placeholder="请输入昵称" v-model="subject"></x-input>
 
       <x-input title="邮箱" name="email" placeholder="请输入邮箱地址" is-type="email"></x-input>
 
@@ -23,7 +21,7 @@
       <popup-radio title="姓别" value-align="left" :options="options2" v-model="option2" placeholder="点击修改"></popup-radio>
 
     </group>
-    <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top:2em; " v-on:click.native="publish">确认</x-button>
+    <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top:2em; margin-bottom: 2em;" v-on:click.native="publish">确认</x-button>
 
   </div>
 </template>

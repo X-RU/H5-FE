@@ -12,7 +12,6 @@
 
     <div style="margin-top: 2em">
         <divider style="margin-bottom: 1em">活动状态</divider>
-
         <checklist value-align="left" :options="commonList" v-model="checklist003" :max=1 >
         </checklist>
     </div>

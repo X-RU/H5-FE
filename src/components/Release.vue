@@ -1,12 +1,15 @@
 <template>
   <div>
+    <div style="margin-top: 1em;">
+      <divider>发起活动</divider>
+    </div>
     <group label-width="4.5em" label-margin-right="2em" label-align="center">
-      <cell title="发起活动"></cell>
       <x-input placeholder="为活动取个名..." title="主题" v-model="subject"></x-input>
 
       <datetime placeholder="点击选取时间" title="时间" v-model="datetime" format="YYYY-MM-DD HH:mm" :minute-list="['00', '15', '30', '45']" value-text-align="left"></datetime>
 
       <x-address title="地址" :list="addressData" placeholder="请选择地址"  :show.sync="showAddress" v-model="addressCode" value-text-align="left"></x-address>
+
 
       <x-input placeholder="活动详细地点" title="地点" v-model="location"></x-input>
       <!-- <datetime placeholder="点击选取日期" title="日期" v-model="date" value-text-align="left"></datetime> -->
@@ -14,19 +17,27 @@
     <br/>
 
     <group>
-      <x-textarea max="50" placeholder="是否需要对活动进行介绍或说明..." v-model="detail" />
+      <x-textarea max=50 placeholder="是否需要对活动进行介绍或说明..." v-model="detail" />
     </group>
 
     <br/>
     <br/>
+    
+    <div id="test">
+      <div class="img-container">
+        <img :src="mySrc" style="margin-bottom: 1em;" />
+      </div>
+      <input id="file" type="file" @change="getFile" ref="file"/>
+      <label for="file">更换主题图片</label>
+    </div>
 
-    <x-button plain type="primary" style="border-radius:99px; width: 67%" v-on:click.native="publish">确认</x-button>
+    <x-button plain type="primary" style="border-radius: 3em; width: 67%; margin-top: 2em; margin-bottom: 2em;" v-on:click.native="publish">发布</x-button>
 
   </div>
 </template>
 
 <script>
-  import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumber, ChinaAddressData, XAddress, XTextarea, XSwitch, XButton, Grid, GridItem,ChinaAddressV4Data, Value2nameFilter as value2name } from 'vux'
+  import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumber, ChinaAddressData, XAddress, XTextarea, XSwitch, XButton, Grid, GridItem,ChinaAddressV4Data, Value2nameFilter as value2name, Divider } from 'vux'
 
   export default {
     name: 'Release',
@@ -45,7 +56,8 @@
       XSwitch,
       XButton,
       Grid,
-      GridItem
+      GridItem,
+      Divider
     },
 
     data () {
@@ -59,13 +71,27 @@
         address: '',
         addressData: ChinaAddressData,
 
-
+        mySrc: 'http://owj98yrme.bkt.clouddn.com//nab/1.jpg'
       }
     },
 
     methods: {
       publish: function(){
         alert(this.subject + ", "+ this. address+ ", " + this.location + ", " + this.detail + ", " + this.datetime + "!")
+      },
+
+      getFile(e){
+        let _this = this;
+        var file = e.target.files[0]
+        if(!e || !window.FileReader){
+          alert("浏览器不支持上传文件或者图片文件已损坏")
+          return
+        }
+        let reader = new FileReader()
+        reader.readAsDataURL(file)
+        reader.onloadend = function(){
+          _this.mySrc = this.result
+        }
       }
 
     },
@@ -80,3 +106,25 @@
 
   }
 </script>
+
+<style>
+  #test {
+    label {
+      width: 120px;
+      display: block;
+      border-radius: 2px;
+      color: #fff;
+      text-align: center;
+      margin-top: 10px;
+      font-size: 12px;
+      background-color: map-get($global-color-base, primary);
+    }
+  }
+#file {
+    display: none;
+    z-index: 10;
+    width: 120px;
+    font-size: 0;
+    height: 30px;
+}
+</style>

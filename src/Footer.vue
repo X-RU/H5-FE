@@ -5,7 +5,7 @@
 				<grid-item link="/" label="首页">
 					<img slot="icon" src="http://p5s0bbd0l.bkt.clouddn.com/icon1.png">
 				</grid-item>
-				<grid-item :link="{ path: '/component/cell'}" label="我的">
+				<grid-item :link="{ path: '/profile'}" label="我的">
 					<img slot="icon" src="http://p5s0bbd0l.bkt.clouddn.com/icon1.png">
 				</grid-item>
 			</grid>
