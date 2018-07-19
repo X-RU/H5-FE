@@ -6,9 +6,7 @@
       发起活动
     </x-button>
 
-    <pre>..{{content}}..</pre>
-
-    <divider @click.native="test">我的活动</divider>
+    <divider>我的活动</divider>
     <panel :list="list" :type="type"></panel>
   </div>
 
@@ -30,86 +28,79 @@
 
     data() {
       return{
-        content: '',
-
-        organizer: 'aaaa',
-        subject: 'zhuti',
-        datetime: 'datetime',
-        address: 'address',
-        location: 'location',
+        cookieV: '',
         type: '5',
         list: [
-          {
-            src: 'http://owj98yrme.bkt.clouddn.com//lufei/0.jpg',
-            title: 'this is subject',
-            desc: 'this is introduce',
-            url: 'https://www.baidu.com',
-            meta: {
-              source: 'this is address',
-              date: 'this is location',
-              other: 'this is datetime'
-            }
-          },
+          // {
+          //   src: 'http://owj98yrme.bkt.clouddn.com//lufei/0.jpg',
+          //   title: 'this is subject',
+          //   desc: 'this is introduce',
+          //   url: 'https://www.baidu.com',
+          //   meta: {
+          //     source: 'this is address',
+          //     date: 'this is location',
+          //     other: 'this is datetime'
+          //   }
+          // },
 
-          {
-            src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
-            title: '篮球活动',
-            desc: '自带篮球、自带水、素质的来Q1',
-            url: 'https://www.baidu.com',
-            meta: {
-              source: '福建省厦门市翔安区',
-              date: '公寓1篮球场',
-              other: '2018-7-15 14:00'
-            }
-          },
+          // {
+          //   src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
+          //   title: '篮球活动',
+          //   desc: '自带篮球、自带水、素质的来Q1',
+          //   url: 'https://www.baidu.com',
+          //   meta: {
+          //     source: '福建省厦门市翔安区',
+          //     date: '公寓1篮球场',
+          //     other: '2018-7-15 14:00'
+          //   }
+          // },
 
-          {
-            src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
-            title: '篮球活动',
-            desc: '自带篮球、自带水、素质的来Q1',
-            url: 'https://www.baidu.com',
-            meta: {
-              source: '福建省厦门市翔安区',
-              date: '公寓1篮球场',
-              other: '2018-7-15 14:00'
-            }
-          },
+          // {
+          //   src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
+          //   title: '篮球活动',
+          //   desc: '自带篮球、自带水、素质的来Q1',
+          //   url: 'https://www.baidu.com',
+          //   meta: {
+          //     source: '福建省厦门市翔安区',
+          //     date: '公寓1篮球场',
+          //     other: '2018-7-15 14:00'
+          //   }
+          // },
 
-          {
-            src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
-            title: '篮球活动',
-            desc: '自带篮球、自带水、素质的来Q1',
-            url: 'https://www.baidu.com',
-            meta: {
-              source: '福建省厦门市翔安区',
-              date: '公寓1篮球场',
-              other: '2018-7-15 14:00'
-            }
-          },
+          // {
+          //   src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
+          //   title: '篮球活动',
+          //   desc: '自带篮球、自带水、素质的来Q1',
+          //   url: 'https://www.baidu.com',
+          //   meta: {
+          //     source: '福建省厦门市翔安区',
+          //     date: '公寓1篮球场',
+          //     other: '2018-7-15 14:00'
+          //   }
+          // },
 
-          {
-            src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
-            title: '篮球活动',
-            desc: '自带篮球、自带水、素质的来Q1',
-            url: 'https://www.baidu.com',
-            meta: {
-              source: '福建省厦门市翔安区',
-              date: '公寓1篮球场',
-              other: '2018-7-15 14:00'
-            }
-          },
+          // {
+          //   src: 'http://owj98yrme.bkt.clouddn.com//lufei/2.jpg',
+          //   title: '篮球活动',
+          //   desc: '自带篮球、自带水、素质的来Q1',
+          //   url: 'https://www.baidu.com',
+          //   meta: {
+          //     source: '福建省厦门市翔安区',
+          //     date: '公寓1篮球场',
+          //     other: '2018-7-15 14:00'
+          //   }
+          // },
 
         ]
       }
     },
 
     methods: {
-      test: function(){
-        console.log(this.list, '@@@@')
-        var url = this.list[0].url + this.list[0].aid
-        alert(url)
+      
+    },
 
-      }
+    created(){
+      
     },
 
     mounted(){
@@ -125,17 +116,59 @@
       //       console.log(response);
       //     }).catch(function (error) {
       //       console.log(error);
-      //     }); 
-      this.axios.get('http://localhost:3003/news',{
+      //     });
+      var cookies = document.cookie.split(';')
+      if(cookies == ''){
+        return
+      }
+      for(var i = 0; i < cookies.length; ++i){
+        var kv = cookies[i].split('=')
+        if(kv[0] == 'panda'){
+          this.cookieV = kv[1]
+          // alert(this.cookieV)
+          break
+        }
+      }
+
+      if(this.cookieV == ''){
+        return
+      }
+
+      var _this = this
+      //    TODO
+      // 1. get ==> post
+      // 2. api ==> ???
+      //
+      //
+      //
+      this.axios.get('http://localhost:3003/index',{
                       params: {
-                        token: '~!@#$%^&*()'
+                        token: _this.cookieV,
                       }
                     })
                     .then(function(response){
-                      console.log(response);
+                      console.log(response, 'home success');
+                      var data = response.data.list
+                      _this.list = new Array([data.length])
+
+                      for(var i = 0; i < data.length; ++i){
+                        _this.list.push(
+                            {
+                              'src': data[i].picture,
+                              'title': data[i].subject,
+                              'desc': data[i].desc,
+                              'url': '/project?pid=' + data[i].id,
+                              'meta': {
+                                'source': data[i].address,
+                                'date': data[i].location,
+                                'other': data[i].datetime
+                              }
+                            }
+                          )
+                      }
                     })
                     .catch(function(error){
-                      console.log(error);
+                      console.log(error, 'home fail');
                     });
     }
   }

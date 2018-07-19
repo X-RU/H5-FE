@@ -2,19 +2,11 @@
   <div>
       <!-- <divider style="margin-top: 1em">活动详情</divider> -->
       <group label-width="4.5em" label-margin-right="2em" label-align="right">
-        <cell title="发布人" value-align="left" :value="value0">
-          <cell-box>
-            刘嘉劲
-          </cell-box>
-        </cell>
-        <cell title="主题" value-align="left" :value="value1"></cell>
-        <cell title="时间" value-align="left" :value="value2"></cell>
-        <cell title="地址" value-align="left" :value="value3"></cell>
-        <cell title="地点" value-align="left" :value="value4">
-          <cell-box>
-            可以存放更多内容可以存放更多内容可以存放更多内容可以存放更多内容可以存放更多内容可以存放多内容
-          </cell-box>
-        </cell>
+        <cell title="发布人" value-align="left" :value="releaser"></cell>
+        <cell title="主题" value-align="left" :value="subject"></cell>
+        <cell title="时间" value-align="left" :value="datetime"></cell>
+        <cell title="地址" value-align="left" :value="address"></cell>
+        <cell title="地点" value-align="left" :value="location"></cell>
       </group>
       
       <group label-width="6em" label-margin-right="2em" label-align="right">
@@ -23,14 +15,15 @@
       </group>
 
       <group>
-          <div id="manager" v-show="true">
-            <cell title="管理（仅限发起人 v-if ）" value-align="left" :link="toManager" is-link></cell>
-        </div>
+          <div id="manager" >
+            <cell title="管理（仅限发起人 v-if ）" value-align="left" :link="toManager" is-link v-if="isManager"></cell>
+          </div>
       </group>
+      
+  
+      <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top: 2em;" v-on:click.native="enroll" v-if="signin">报名</x-button>
 
-      <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top: 2em;" v-on:click.native="publish">报名/取消报名</x-button>
-<!-- 
-      <router-view><router-view/> -->
+      <x-button plain type="warn" style="border-radius:99px; width: 67%; margin-top: 2em; " v-on:click.native="enroll" v-if="cancel">取消报名</x-button>
 
   </div>
 </template>
@@ -51,13 +44,115 @@ export default{
 
   data() {
     return {
-      activityId: '5',
-      value0: '1111wdweweweweweweweweweweweew1sdsdsdsd',
+      CookieV: '',
+      activityId: '',
+
+      releaser: 'randomer',
+      datetime: 'a',
+      subject: 'oo',
+      address: 'xxx',
+      location: 'cc',
+
+      isManager: false,
+      signin: true,
+      cancel: false,
       toMembers: '/members',
       toPhotos: '/photos',
       toManager: '/manager',
     }
   },
+
+  methods: {
+    enroll(){
+      var _this = this
+      this.axios.get('http://localhost:3003/enroll', {
+          token: this.cookieV,
+          activityId: this.activityId
+        }).then(function (response) {
+          console.log(response);
+          if(response.data.status == '1' || response.data.status == '0'){
+            _this.signin = !_this.signin
+            _this.cancel = !_this.cancel
+          }
+          else{
+            alert(response.data.msg)
+          }
+
+        }).catch(function (error) {
+          alert(error.code + ": " + error.msg)
+          console.log(error);
+        });
+    }
+  },
+
+  mounted(){
+    //获取   ?pid=123  中的项目编号
+    var url = document.location.toString(); //获取url中"?"符后的字串
+    if(url.indexOf('?') != -1){
+      url = url.substring(url.indexOf('?')+1, url.length)
+      kv = url.split('=')
+      if(kv[0] == 'pid' && kv[1] != null){
+        this.activityId = kv[1]
+      }
+    }
+
+    this.toMembers = '/members?pid=' + this.activityId
+    this.toPhotos = '/photos?pid=' + this.activityId
+    this.toManager = '/manager?pid=' + this.activityId
+
+    // document.cookie='panda=' + 'this_is_panda_cookie'
+    var cookies = document.cookie.split(';')
+    if(cookies == ''){
+      return
+    }
+
+    for(var i = 0; i < cookies.length; ++i){
+      var kv = cookies[i].split('=')
+      if(kv[0] == 'panda'){
+        this.cookieV = kv[1]
+        this.showManage = true
+        // alert(this.cookieV)
+        break
+      }
+    }
+    if(this.cookieV == ''){
+      return
+    }
+
+    var _this = this;
+    if(this.activityId != ''){
+      this.axios.get('http://localhost:3003/project', {
+          token: _this.cookieV,
+          activityId: _this.activityId
+        }).then(function (response) {
+          console.log(response);
+            _this.releaser = response.data.releaser
+            _this.subject = response.data.subject
+            _this.datetime = response.data.datetime
+            _this.address = response.data.address
+            _this.location = response.data.location
+
+            if(response.data.isManager == 'true'){
+              _this.isManager = true
+            }
+            else{
+              _this.isManager = false
+            }
+
+            if(response.data.enrolled == 'true'){
+              _this.signin = false
+              _this.cancel = true
+            }
+            else{
+              _this.signin = true
+              _this.cancel = false
+            }
+        }).catch(function (error) {
+          alert(error.code + ": " + error.msg)
+          console.log(error);
+        });
+    }
+  }
 }
 </script>
 

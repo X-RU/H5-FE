@@ -4,28 +4,18 @@
     <group label-width="4.5em" label-margin-right="2em" label-align="right">
       <x-input title="主题" v-model="subject"></x-input>
       <datetime title="时间" v-model="datetime" format="YYYY-MM-DD HH:mm" :minute-list="['00', '15', '30', '45']" value-text-align="left"></datetime>
-      <x-address title="地址" :list="addressData" placeholder="请选择地址"  :show.sync="showAddress" v-model="addressCode" value-text-align="left"></x-address>
+      <x-address title="地址" :list="addressData" :placeholder="addressCode"  :show.sync="showAddress" v-model="oadc" value-text-align="left"></x-address>
 
       <x-input title="地点" v-model="location"></x-input>
+     
     </group>
 
 
-    <div style="margin-top: 2em">
-        <divider style="margin-bottom: 1em">活动状态</divider>
-        <checklist value-align="left" :options="commonList" v-model="checklist003" :max=1 >
-        </checklist>
-    </div>
+    <group>
+      <popup-radio :title="statusMsg"  label-width="4.5em" label-margin-right="2em" label-align="right" :options="options2" v-model="option2" ></popup-radio>
+    </group>
 
-    <div style="margin-top: 2em">
-        <divider style="margin-bottom: 1em">主题图片</divider>
-
-          <img v-bind:src="subjectImg" width="200em" height="200em" style="border-radius: 2em" v-on:click="changeImg"/>
-          <br/>
-          <input class="" type="file" align="center">
-
-    </div>
-    
-    <divider style="margin-top: 1em">test</divider>
+    <divider style="margin-top: 1em">主题图片</divider>
     
     <div id="test">
       <div class="img-container">
@@ -35,7 +25,7 @@
       <label for="file">画像变更</label>
     </div>
     <x-button style= "width: 67%; margin-top:2em; margin-bottom:1em; " type="primary"
-      link="http://localhost:8080/#/release">
+      v-on:click.native="change">
       确认修改
     </x-button>
     <router-view></router-view>
@@ -45,7 +35,7 @@
 
 
 <script>
-import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumber, ChinaAddressData, XAddress, XTextarea, XSwitch, XButton, Grid, GridItem, Divider,Card, Checklist, ChinaAddressV4Data, Value2nameFilter as value2nam } from 'vux'
+import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumber, ChinaAddressData, XAddress, XTextarea, XSwitch, XButton, Grid, GridItem, Divider,Card, Checklist, ChinaAddressV4Data, Value2nameFilter as value2name, Checker, CheckerItem, PopupRadio } from 'vux'
 
   export default {
     components: {
@@ -67,41 +57,96 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
       Divider,
       Card,
       Checklist,
+      Checker,
+      CheckerItem,
+      PopupRadio
+    },
+
+    mounted(){
+      var url = document.location.toString(); //获取url中"?"符后的字串
+      if(url.indexOf('?') != -1){
+        url = url.substring(url.indexOf('?')+1, url.length)
+        var kv = url.split('=')
+        if(kv[0] == 'pid' && kv[1] != null){
+          this.activityId = kv[1]
+        }
+      }
+
+      var _this = this
+      this.axios.get('http://localhost:3003/manager',{
+                      params: {
+                        project_id: _this.activityId
+                      }
+                    })
+                    .then(function(response){
+                      var form = response.data.data
+                      console.log(form, '~!!')
+                      _this.subject = form.title
+                      _this.location = form.location
+                      _this.datetime = form.time
+                      _this.detail = form.description
+                      _this.addressCode = form.latitude_longitude
+                      _this.mySrc = form.picture
+                      if(form.status != null){
+                        _this.status = form.status
+                        _this.statusMsg = form.status
+                      }
+                      else{
+                        _this.statusMsg = '点击修改活动状态'
+                      }
+                    })
+                    .catch(function(error){
+                      alert("error")
+                      console.log(error);
+                    });
+
     },
 
     data() {
         return {
           subject: '',
           location: '',
-          datetime: '',
+          datetime: '1999-10-12 16:00',
           detail: '',
           addressCode: [],
+          oadc: [],
           address: '',
           addressData: ChinaAddressData,
 
           activityId: '',
-
+          status: '',
           toMembers: '/enroll/members',
           toPhotos: '/enroll/photos',
           toManager: '/enroll/manager',
-          commonList: [ '尚未开始', '报名结束', '进行中', '已结束' ],
+          status: '',
+          // subjectImg: 'http://owj98yrme.bkt.clouddn.com/236435132238682874.webp',
+          // imgSource: '',
 
-          subjectImg: 'http://owj98yrme.bkt.clouddn.com/236435132238682874.webp',
-          imgSource: '',
+          mySrc: 'http://owj98yrme.bkt.clouddn.com//lufei/9.jpg',
 
-          mySrc: 'http://owj98yrme.bkt.clouddn.com//lufei/9.jpg'
+          option2: '',
+          options2: [
+            {
+              key: 'A',
+              value: '尚未开始'
+            }, 
+            {
+              key: 'B',
+              value: '正在进行'
+            },
+            {
+              key: 'C',
+              value: '报名结束'
+            },
+            {
+              key: 'D',
+              value: '已经取消'
+            }
+          ],
         }
     },
 
     methods: {
-      onItemClick () {
-        console.log('on item click')
-      },
-      changeImg(){
-        alert("!")
-        this.subjectImg = 'http://owj98yrme.bkt.clouddn.com//lufei/3.jpg'
-        console.log(this.imgSource, '!@#$%')
-      },
       getFile(e){
         let _this = this;
         var file = e.target.files[0]
@@ -114,15 +159,50 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
         reader.onloadend = function(){
           _this.mySrc = this.result
         }
+      },
+      change(){
+        this.address = value2name(this.oadc, ChinaAddressV4Data)
+        var _this = this
+        alert(this.activityId + ", " + this.subject + ", " + this.datetime + ", " + this.location + ", " + this.address + ", " + this.status + ", " + this.mySrc)
+        this.axios.post('',{
+                      project_id: _this.activityId,
+                      picture: _this.mySrc,
+                      title: _this.subject,
+                      time: _this.datetime,
+                      location: _this.location,
+                      latitude_longitude: _this.address,
+                      status: _this.status
+                  }).then(function(response){
+                    console.log(_this.list, "!!!!!!!!")
+                  })
+                  .catch(function(error){
+                    alert("error")
+                    console.log(error);
+                  });
       }
+
     },
 
     watch: {
       addressCode: function() {
         // alert(value2name(this.addressVal, ChinaAddressV4Data))
-        this.address = value2name(this.addressCode, ChinaAddressV4Data)
-
-    }
+        // this.address = value2name(this.addressCode, ChinaAddressV4Data)
+      },
+      option2: function(){
+        if(this.option2 == "A"){
+          this.status = '尚未开始'
+        }
+        else if(this.option2 == "B"){
+          this.status = '正在进行'
+        }
+        else if(this.option2 == "C"){
+          this.status = '报名结束'
+        }
+        else if(this.option2 == "D"){
+          this.status = '已经取消'
+        }
+        this.statusMsg = '点击修改活动状态'
+      }
   }
 
 }

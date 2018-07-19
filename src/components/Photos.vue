@@ -5,14 +5,16 @@
       <previewer :list="list" ref="previewer" :options="options" @on-index-change="logIndexChange"></previewer>
     </div>
 
-    <divider style="margin-top: 1em; margin-bottom: 1em">更改我的上传</divider>
-    
+    <divider style="margin-top: 1em; margin-bottom: 1em;" v-if="isUpload">更改我的上传</divider>
+
+    <divider style="margin-top: 1em; margin-bottom: 1em" v-if="_isUpload">上传活动照片</divider>
+
     <div id="test" v-model="shit">
       <div class="img-container">
         <img :src="mySrc" />
       </div>
       <input id="file" type="file" ref="file" v-on:change="getFile"/>
-      <label for="file">画像变更</label>
+      <label for="file">选取照片</label>
     </div>
   </div>
 
@@ -33,6 +35,62 @@ export default {
     Divider,
     XButton
   },
+
+  mounted(){
+
+    var url = document.location.toString(); //获取url中"?"符后的字串
+    if(url.indexOf('?') != -1){
+      url = url.substring(url.indexOf('?')+1, url.length)
+      kv = url.split('=')
+      if(kv[0] == 'pid' && kv[1] != null){
+        this.activityId = kv[1]
+      }
+    }
+
+    var _this = this
+
+    this.axios.get('http://localhost:3003/photos',{
+                    params: {
+                      token: _this.cookieV,
+                      project_id: _this.activityId
+                    }
+                  })
+                  .then(function(response){
+                    var photos = response.data.photos
+                    if(response.data.isLogin == 'true'){
+                      _this.isLogin = true
+                    }
+                    else{
+                      _this.isLogin = false
+                    }
+
+                    //没有登录肯定没有上传
+                    if(response.data.isUpload = 'true'){
+                      _this.isUpload = true
+                      _this._isUpload = !_this.isUpload
+                      _this.mySrc = photos[response.data.index]
+                    }
+                    else{
+                      _this.isUpload = false
+                      _this._isUpload = !_this.isUpload
+                    }
+
+                    _this.list = new Array([photos.length])
+                    
+                    for(var i = 0; i < photos.length; ++i){
+                      _this.list.push({
+                        'msrc': photos[i],
+                        'src': photos[i]
+                      })
+                    }
+                    console.log(_this.list, "!!!!!!!!")
+                  })
+                  .catch(function(error){
+                    alert("error")
+                    console.log(error);
+                  });
+  },
+
   methods: {
     logIndexChange (arg) {
       console.log(arg)
@@ -42,54 +100,39 @@ export default {
     },
 
     getFile(e){
-          let _this = this;
-          var file = e.target.files[0]
-          if(!e || !window.FileReader){
-            alert("浏览器不支持上传文件或者图片文件已损坏")
-            return
-          }
-          let reader = new FileReader()
+      let _this = this;
+      var file = e.target.files[0]
+      if(!e || !window.FileReader){
+        alert("浏览器不支持上传文件或者图片文件已损坏")
+        return
+      }
+      let reader = new FileReader()
 
-          reader.readAsDataURL(file)
-          reader.onloadend = function(){
-            _this.mySrc = this.result
-            _this.list[0].msrc = this.result
-            _this.list[0].src =  this.result
-          }
-          
-        },
+      reader.readAsDataURL(file)
+      reader.onloadend = function(){
+        for(var i = 0; i < _this.list.length; ++i){
+          // alert(_this.list[i])
+          // if(_this.mySrc == _this.list[i]){
+          //   _this.mySrc = this.result
+          //   _this.list[i].msrc = this.result
+          //   _this.list[i].src = this.result
+          //   break
+        }
+      }
+      // axios
+    },
 
   },
   data () {
     return {
-      mySrc: 'http://owj98yrme.bkt.clouddn.com//nab/5.jpg',
-      list: [
-        {
-          msrc: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg',
-          src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwu9ze86j20m80b40t2.jpg'
-        },
-        {
-          msrc: 'http://ww1.sinaimg.cn/thumbnail/663d3650gy1fplwvqwuoaj20xc0p0t9s.jpg',
-          src: 'http://ww1.sinaimg.cn/large/663d3650gy1fplwvqwuoaj20xc0p0t9s.jpg'
-        }, 
-        {
-          msrc: 'http://owj98yrme.bkt.clouddn.com//nab/7.jpg',
-          src: 'http://owj98yrme.bkt.clouddn.com//nab/7.jpg'
-          
-        },
-        {
-          msrc: 'http://owj98yrme.bkt.clouddn.com//nab/8.jpg',
-          src: 'http://owj98yrme.bkt.clouddn.com//nab/8.jpg'
-        },
-        {
-          msrc: 'http://owj98yrme.bkt.clouddn.com//nab/5.jpg',
-          src: 'http://owj98yrme.bkt.clouddn.com//nab/5.jpg'
-        },
-        {
-          msrc: 'http://owj98yrme.bkt.clouddn.com//nab/1.jpg',
-          src: 'http://owj98yrme.bkt.clouddn.com//nab/1.jpg'
-        }
-      ],
+      CookieV: '',
+      activityId: '',
+      isLogin: false,
+      isUpload: true,
+      _isUpload: false,
+      mySrc: '',
+      list: [],
+
       options: {
         getThumbBoundsFn (index) {
           // find thumbnail element

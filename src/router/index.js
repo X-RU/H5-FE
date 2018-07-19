@@ -8,6 +8,8 @@ import Enroll from '@/components/Enroll'
 import Manager from '@/components/Manager'
 import Photos from '@/components/Photos'
 import Profile from '@/components/Profile'
+import Members from '@/components/Members'
+
 
 Vue.use(Router)
 
@@ -18,18 +20,18 @@ export default new Router({
 			name: 'Home',
 			component: Home
 		},
-		{
-			path: '/index',
-			name: 'Home',
-			component: Home
-		},
+		// {
+		// 	path: '/index',
+		// 	name: 'Home',
+		// 	component: Home
+		// },
 		{
 			path: '/release',
 			name: 'Release',
 			component: Release
 		},
 		{
-			path: '/enroll',
+			path: '/project',
 			name: 'Enroll',
 			component: Enroll
 		},
@@ -48,6 +50,11 @@ export default new Router({
 			path: '/profile',
 			name: 'Profile',
 			component: Profile
+		},
+		{
+			path: '/members',
+			name: 'Members',
+			component: Members
 		},
 	]
 })

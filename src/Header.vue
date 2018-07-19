@@ -1,8 +1,10 @@
 <template>
   <div id="header">
     <x-header :left-options="{showBack: false}">
-      小竹活动中心<a slot="right" href="#" style="text-decoration:none;">
-        <div v-model="username">{{ username }}</div></a>
+      小竹活动中心
+      <a slot="right" href="#" style="text-decoration:none;">
+        <!-- <div >{{ username }}</div> -->
+      </a>
     </x-header>
   </div>
 </template>
@@ -18,8 +20,44 @@
 
     data() {
       return {
-        username: 'randomer'
+        cookieV: '',
+        // username: '登录',
       }
+    },
+
+    mounted(){
+      // var cookies = document.cookie.split(';')
+      // if(cookies == ''){
+      //   return
+      // }
+      // for(var i = 0; i < cookies.length; ++i){
+      //   var kv = cookies[i].split('=')
+      //   if(kv[0] == 'panda'){
+      //     this.cookieV = kv[1]
+      //     // alert(this.cookieV)
+      //     break
+      //   }
+      // }
+
+      // if(this.cookieV == ''){
+      //   return
+      // }
+      // if contains panda cookie, then get userdata from php
+      // var _this = this
+      // _this.axios.post('http://api.komavideo.com/news/list',{
+      //                 params: {
+      //                   token: _this.cookieV,
+      //                 }
+      //               })
+      //               .then(function(response){
+      //                 console.log(response, 'success');
+      //                 console.log(response.data[0].title, '~~ ~~~~~~~~~~')
+      //                 _this.username = response.data[0].title
+      //               })
+      //               .catch(function(error){
+      //                 console.log(error, 'error');
+      //               });
+      
     }
 }
 

@@ -12,13 +12,13 @@
         <label for="file" style="margin: 1em; border-style: solid; border-width: 0.1em;">选择新头像</label>
       </div>
 
-      <x-input style="margin-top: 1em" title="昵称" placeholder="请输入昵称" v-model="subject"></x-input>
+      <cell style="margin-top: 1em" title="昵称" value-align="left" v-model="screen_name"></cell>
 
-      <x-input title="邮箱" name="email" placeholder="请输入邮箱地址" is-type="email"></x-input>
+      <cell title="性别"  value-align="left" v-model="gender"></cell>
 
-      <x-input title="手机" name="mobile" placeholder="请输入手机号码" keyboard="number" is-type="china-mobile"></x-input>
+      <cell title="描述"  value-align="left" v-model="description"></cell>
 
-      <popup-radio title="姓别" value-align="left" :options="options2" v-model="option2" placeholder="点击修改"></popup-radio>
+      <!-- <popup-radio title="姓别" value-align="left" :options="options2" v-model="option2" placeholder="点击修改"></popup-radio> -->
 
     </group>
     <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top:2em; margin-bottom: 2em;" v-on:click.native="publish">确认</x-button>
@@ -53,14 +53,9 @@
 
     data () {
       return {
-        subject: '',
-        location: '',
-        // date: '',
-        datetime: '',
-        detail: '',
-        addressCode: [],
-        address: '',
-        addressData: ChinaAddressData,
+        screen_name: '',
+        gender: '',
+        description: '',
 
         option2: '',
         options2: [{
@@ -75,9 +70,45 @@
       }
     },
 
+    mounted(){
+      var _this = this
+      this.axios.get('http://localhost:3003/profile',{
+                      params: {
+                        // project_id: _this.activityId
+                      }
+                    })
+                    .then(function(response){
+                      var form = response.data.data
+                      console.log(form, '~!!!!!!!')
+                      _this.screen_name = form.screen_name
+                      _this.gender = form.gender
+                      _this.description = form.description
+                    })
+                    .catch(function(error){
+                      alert("error")
+                      console.log(error);
+                    });
+    },
+
     methods: {
       publish: function(){
-        alert(this.subject + ", "+ this. address+ ", " + this.location + ", " + this.detail + ", " + this.datetime + "!")
+        var _this = this
+        //   TODO
+        //
+        //
+        //
+        //
+        //
+        this.axios.post('',{
+                  picture: _this.mySrc
+              })
+              .then(function(response){
+                console.log(response)
+              })
+              .catch(function(error){
+                alert("error")
+                console.log(error);
+              });
       },
       getFile(e){
         let _this = this;

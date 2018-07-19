@@ -4,7 +4,7 @@
       <divider>发起活动</divider>
     </div>
     <group label-width="4.5em" label-margin-right="2em" label-align="center">
-      <x-input placeholder="为活动取个名..." title="主题" v-model="subject"></x-input>
+      <x-input placeholder="为活动取个名（max=10）..." title="主题" v-model="subject" max=10></x-input>
 
       <datetime placeholder="点击选取时间" title="时间" v-model="datetime" format="YYYY-MM-DD HH:mm" :minute-list="['00', '15', '30', '45']" value-text-align="left"></datetime>
 
@@ -21,11 +21,10 @@
     </group>
 
     <br/>
-    <br/>
-    
+  
     <div id="test">
       <div class="img-container">
-        <img :src="mySrc" style="margin-bottom: 1em;" />
+        <img :src="mySrc" style="margin-bottom: 1em; width: 100%;" />
       </div>
       <input id="file" type="file" @change="getFile" ref="file"/>
       <label for="file">更换主题图片</label>
@@ -62,9 +61,9 @@
 
     data () {
       return {
+        cookieV: '',
         subject: '',
         location: '',
-        // date: '',
         datetime: '',
         detail: '',
         addressCode: [],
@@ -77,7 +76,35 @@
 
     methods: {
       publish: function(){
-        alert(this.subject + ", "+ this. address+ ", " + this.location + ", " + this.detail + ", " + this.datetime + "!")
+        if(this.subject == '' || this.address == '' || this.location == ''){
+          alert("主题、地址和地点为必填项")
+          return
+        }
+
+        if(this.cookieV == ''){
+          //TODO redirect to webo login
+        }
+
+        alert(this.cookieV + ", " + this.subject + ", "+ this. address+ ", " + this.location + ", " + this.detail + ", " + this.datetime + this.mySrc +"!")
+
+        var _this = this
+        this.axios.get('http://localhost:3003/release', {
+            token: _this.cookieV,
+            title: _this.subject,
+            time: _this.datetime,
+            location: _this.location,
+            latitude_longitude: _this.address,
+            picture: _this.mySrc,
+            description: _this.detail
+          }).then(function (response) {
+            console.log(response);
+            alert(response.data.activityId)
+            window.location="http://localhost:8080/#/project?pid=" + response.data.activityId
+
+          }).catch(function (error) {
+            alert(error.code + ": " + error.msg)
+            console.log(error);
+          });
       },
 
       getFile(e){
@@ -92,8 +119,7 @@
         reader.onloadend = function(){
           _this.mySrc = this.result
         }
-      }
-
+      },
     },
 
     watch: {
@@ -101,7 +127,22 @@
         // alert(value2name(this.addressVal, ChinaAddressV4Data))
         this.address = value2name(this.addressCode, ChinaAddressV4Data)
       },
+    },
 
+    mounted(){
+        // document.cookie='panda=' + 'this_is_panda_cookie'
+        var cookies = document.cookie.split(';')
+        if(cookies == ''){
+          return
+        }
+        for(var i = 0; i < cookies.length; ++i){
+          var kv = cookies[i].split('=')
+          if(kv[0] == 'panda'){
+            this.cookieV = kv[1]
+            // alert(this.cookieV)
+            break
+          }
+        }
     }
 
   }
