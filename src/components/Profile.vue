@@ -62,7 +62,7 @@
             key: 'A',
             value: '男'
           }, {
-            key: 'B', 
+            key: 'B',
             value: '女'
         }],
 
@@ -78,11 +78,13 @@
                       }
                     })
                     .then(function(response){
+                      alert("??")
                       var form = response.data.data
                       console.log(form, '~!!!!!!!')
                       _this.screen_name = form.screen_name
                       _this.gender = form.gender
                       _this.description = form.description
+                      _this.mySrc = form.picture_url
                     })
                     .catch(function(error){
                       alert("error")
@@ -100,7 +102,7 @@
         //
         //
         this.axios.post('',{
-                  picture: _this.mySrc
+                  picture_url: _this.mySrc
               })
               .then(function(response){
                 console.log(response)
@@ -130,7 +132,7 @@
     watch: {
       addressCode: function() {
         // alert(value2name(this.addressVal, ChinaAddressV4Data))
-        this.address = value2name(this.addressCode, ChinaAddressV4Data)
+        // this.address = value2name(this.addressCode, ChinaAddressV4Data)
       },
 
     }

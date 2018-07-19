@@ -1,14 +1,15 @@
 <template>
   <div>
-    <div style="margin-top: 1em;">
+    <div style="margin-top: 0.1em;">
       <divider>发起活动</divider>
     </div>
     <group label-width="4.5em" label-margin-right="2em" label-align="center">
       <x-input placeholder="为活动取个名（max=10）..." title="主题" v-model="subject" max=10></x-input>
 
       <datetime placeholder="点击选取时间" title="时间" v-model="datetime" format="YYYY-MM-DD HH:mm" :minute-list="['00', '15', '30', '45']" value-text-align="left"></datetime>
-
-      <x-address title="地址" :list="addressData" placeholder="请选择地址"  :show.sync="showAddress" v-model="addressCode" value-text-align="left"></x-address>
+      
+      <!-- :show.sync="showAddress" -->
+      <x-address title="地址" :list="addressData" placeholder="请选择地址"   v-model="addressCode" value-text-align="left"></x-address>
 
 
       <x-input placeholder="活动详细地点" title="地点" v-model="location"></x-input>
@@ -61,7 +62,7 @@
 
     data () {
       return {
-        cookieV: '',
+        // cookieV: '',
         subject: '',
         location: '',
         datetime: '',
@@ -69,8 +70,7 @@
         addressCode: [],
         address: '',
         addressData: ChinaAddressData,
-
-        mySrc: 'http://owj98yrme.bkt.clouddn.com//nab/1.jpg'
+        mySrc: 'http://owj98yrme.bkt.clouddn.com//nab/6.jpg'
       }
     },
 
@@ -81,15 +81,11 @@
           return
         }
 
-        if(this.cookieV == ''){
-          //TODO redirect to webo login
-        }
-
-        alert(this.cookieV + ", " + this.subject + ", "+ this. address+ ", " + this.location + ", " + this.detail + ", " + this.datetime + this.mySrc +"!")
+        alert( this.subject + ", "+ this. address+ ", " + this.location + ", " + this.detail + ", " + this.datetime + this.mySrc +"!")
 
         var _this = this
         this.axios.get('http://localhost:3003/release', {
-            token: _this.cookieV,
+            // token: _this.cookieV,
             title: _this.subject,
             time: _this.datetime,
             location: _this.location,
@@ -98,8 +94,8 @@
             description: _this.detail
           }).then(function (response) {
             console.log(response);
-            alert(response.data.activityId)
-            window.location="http://localhost:8080/#/project?pid=" + response.data.activityId
+            // alert(response.data.activityId)
+            window.location="http://localhost:8080/#/project/detailed/" + '123'
 
           }).catch(function (error) {
             alert(error.code + ": " + error.msg)
@@ -130,19 +126,7 @@
     },
 
     mounted(){
-        // document.cookie='panda=' + 'this_is_panda_cookie'
-        var cookies = document.cookie.split(';')
-        if(cookies == ''){
-          return
-        }
-        for(var i = 0; i < cookies.length; ++i){
-          var kv = cookies[i].split('=')
-          if(kv[0] == 'panda'){
-            this.cookieV = kv[1]
-            // alert(this.cookieV)
-            break
-          }
-        }
+
     }
 
   }

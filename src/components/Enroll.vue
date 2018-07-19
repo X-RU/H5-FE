@@ -112,9 +112,9 @@ export default{
     }
     // alert(this.activityId)
 
-    this.toMembers = '/members?pid=' + this.activityId
+    this.toMembers = '/project/relationPeople/' + this.activityId
     // this.toPhotos = '/photos?pid=' + this.activityId
-    this.toManager = '/manager?pid=' + this.activityId
+    this.toManager = '/project/manager/' + this.activityId
 
     // document.cookie='panda=' + 'this_is_panda_cookie'
     // var cookies = document.cookie.split(';')

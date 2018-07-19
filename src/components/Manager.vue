@@ -4,7 +4,9 @@
     <group label-width="4.5em" label-margin-right="2em" label-align="right">
       <x-input title="主题" v-model="subject"></x-input>
       <datetime title="时间" v-model="datetime" format="YYYY-MM-DD HH:mm" :minute-list="['00', '15', '30', '45']" value-text-align="left"></datetime>
-      <x-address title="地址" :list="addressData" :placeholder="addressCode"  :show.sync="showAddress" v-model="oadc" value-text-align="left"></x-address>
+
+      <!-- :show.sync="showAddress" -->
+      <x-address title="地址" :list="addressData" :placeholder="addressCode"   v-model="oadc" value-text-align="left"></x-address>
 
       <x-input title="地点" v-model="location"></x-input>
 
@@ -16,7 +18,7 @@
     </group>
 
     <divider style="margin-top: 1em">主题图片</divider>
-    
+
     <div id="test">
       <div class="img-container">
         <img :src="mySrc" />
@@ -64,13 +66,11 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
 
     mounted(){
       var url = document.location.toString(); //获取url中"?"符后的字串
-      if(url.indexOf('?') != -1){
-        url = url.substring(url.indexOf('?')+1, url.length)
-        var kv = url.split('=')
-        if(kv[0] == 'pid' && kv[1] != null){
-          this.activityId = kv[1]
-        }
+      if(url.lastIndexOf('/') != -1){
+        var pid = url.substring(url.lastIndexOf('/')+1, url.length)
+        this.activityId = pid
       }
+      alert(this.activityId)
       var _this = this
       this.axios.get('http://localhost:3003/manager',{
                       params: {
@@ -80,7 +80,7 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
                     .then(function(response){
                       var form = response.data.data
                       console.log(form, '~!!')
-                      _this.activityId = form.id
+                      // _this.activityId = form.id
                       _this.subject = form.title
                       _this.location = form.location
                       _this.datetime = form.time
@@ -114,12 +114,12 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
           address: '',
           addressData: ChinaAddressData,
 
-          activityId: '',
           status: '',
           toMembers: '/enroll/members',
           toPhotos: '/enroll/photos',
           toManager: '/enroll/manager',
           status: '',
+          statusMsg: '',
           // subjectImg: 'http://owj98yrme.bkt.clouddn.com/236435132238682874.webp',
           // imgSource: '',
 
@@ -130,7 +130,7 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
             {
               key: 'A',
               value: '尚未开始'
-            }, 
+            },
             {
               key: 'B',
               value: '正在进行'

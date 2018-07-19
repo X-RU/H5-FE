@@ -47,12 +47,12 @@ export default new Router({
 			component: Photos
 		},
 		{
-			path: '/profile',
+			path: '/user/message',
 			name: 'Profile',
 			component: Profile
 		},
 		{
-			path: '/members',
+			path: '/project/relationPeople/:id',
 			name: 'Members',
 			component: Members
 		},
