@@ -31,12 +31,12 @@ export default new Router({
 			component: Release
 		},
 		{
-			path: '/project',
+			path: '/project/detailed/:id',
 			name: 'Enroll',
 			component: Enroll
 		},
 		{
-			path: '/manager',
+			path: '/project/manager/:id',
 			name: 'Manager',
 			component: Manager
 

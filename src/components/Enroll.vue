@@ -11,7 +11,7 @@
       
       <group label-width="6em" label-margin-right="2em" label-align="right">
         <cell title="报名详情" value-align="left" :link="toMembers" is-link></cell>
-        <cell title="相册" value-align="left" :link="toPhotos" is-link></cell>
+        <!-- <cell title="相册" value-align="left" :link="toPhotos" is-link></cell> -->
       </group>
 
       <group>
@@ -23,7 +23,7 @@
   
       <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top: 2em;" v-on:click.native="enroll" v-if="signin">报名</x-button>
 
-      <x-button plain type="warn" style="border-radius:99px; width: 67%; margin-top: 2em; " v-on:click.native="enroll" v-if="cancel">取消报名</x-button>
+      <x-button plain type="warn" style="border-radius:99px; width: 67%; margin-top: 2em; " v-on:click.native="_cancel" v-if="cancel">取消报名</x-button>
 
   </div>
 </template>
@@ -65,59 +65,75 @@ export default{
   methods: {
     enroll(){
       var _this = this
+     
+      //         /project/attend
       this.axios.get('http://localhost:3003/enroll', {
-          token: this.cookieV,
           activityId: this.activityId
         }).then(function (response) {
           console.log(response);
-          if(response.data.status == '1' || response.data.status == '0'){
-            _this.signin = !_this.signin
-            _this.cancel = !_this.cancel
-          }
-          else{
-            alert(response.data.msg)
-          }
+          _this.signin = !_this.signin
+          _this.cancel = !_this.cancel
+
+        }).catch(function (error) {
+          alert(error.code + ": " + error.msg)
+          console.log(error);
+        });
+    },
+
+    _cancel(){
+
+      var _this = this
+      //         /project/cancel
+      this.axios.get('http://localhost:3003/enroll', {
+          activityId: this.activityId
+        }).then(function (response) {
+          console.log(response);
+          _this.signin = !_this.signin
+          _this.cancel = !_this.cancel
 
         }).catch(function (error) {
           alert(error.code + ": " + error.msg)
           console.log(error);
         });
     }
+
   },
 
   mounted(){
     //获取   ?pid=123  中的项目编号
     var url = document.location.toString(); //获取url中"?"符后的字串
-    if(url.indexOf('?') != -1){
-      url = url.substring(url.indexOf('?')+1, url.length)
-      kv = url.split('=')
-      if(kv[0] == 'pid' && kv[1] != null){
-        this.activityId = kv[1]
-      }
+    if(url.lastIndexOf('/') != -1){
+      var pid = url.substring(url.lastIndexOf('/')+1, url.length)
+      this.activityId = pid
+      // kv = url.split('=')
+      // if(kv[0] == 'pid' && kv[1] != null){
+      //   this.activityId = kv[1]
+      // }
     }
+    // alert(this.activityId)
 
     this.toMembers = '/members?pid=' + this.activityId
-    this.toPhotos = '/photos?pid=' + this.activityId
+    // this.toPhotos = '/photos?pid=' + this.activityId
     this.toManager = '/manager?pid=' + this.activityId
 
     // document.cookie='panda=' + 'this_is_panda_cookie'
-    var cookies = document.cookie.split(';')
-    if(cookies == ''){
-      return
-    }
+    // var cookies = document.cookie.split(';')
+    // if(cookies == ''){
+    //   return
+    // }
 
-    for(var i = 0; i < cookies.length; ++i){
-      var kv = cookies[i].split('=')
-      if(kv[0] == 'panda'){
-        this.cookieV = kv[1]
-        this.showManage = true
-        // alert(this.cookieV)
-        break
-      }
-    }
-    if(this.cookieV == ''){
-      return
-    }
+    // for(var i = 0; i < cookies.length; ++i){
+    //   var kv = cookies[i].split('=')
+    //   if(kv[0] == 'panda'){
+    //     this.cookieV = kv[1]
+    //     this.showManage = true
+    //     // alert(this.cookieV)
+    //     break
+    //   }
+    // }
+    // if(this.cookieV == ''){
+    //   return
+    // }
 
     var _this = this;
     if(this.activityId != ''){
@@ -126,10 +142,10 @@ export default{
           activityId: _this.activityId
         }).then(function (response) {
           console.log(response);
-            _this.releaser = response.data.releaser
-            _this.subject = response.data.subject
-            _this.datetime = response.data.datetime
-            _this.address = response.data.address
+            _this.releaser = response.data.creator
+            _this.subject = response.data.title
+            _this.datetime = response.data.time
+            _this.address = response.data.latitude_longitude
             _this.location = response.data.location
 
             if(response.data.isManager == 'true'){
@@ -139,14 +155,11 @@ export default{
               _this.isManager = false
             }
 
-            if(response.data.enrolled == 'true'){
-              _this.signin = false
-              _this.cancel = true
-            }
-            else{
-              _this.signin = true
-              _this.cancel = false
-            }
+            
+            _this.signin = false
+            _this.cancel = true
+            
+            
         }).catch(function (error) {
           alert(error.code + ": " + error.msg)
           console.log(error);

@@ -1,11 +1,9 @@
 <template>
   <div id="header">
     <x-header :left-options="{showBack: false}">
-      小竹活动中心
-      <a slot="right" href="#" style="text-decoration:none;">
-        <!-- <div >{{ username }}</div> -->
-      </a>
-    </x-header>
+       {{ subject }}
+<!--       <a slot="right" href="#" style="text-decoration:none;"></a>
+ -->    </x-header>
   </div>
 </template>
 <script>
@@ -20,12 +18,15 @@
 
     data() {
       return {
-        cookieV: '',
+        // cookieV: '',
         // username: '登录',
+        subject: '小竹活动中心'
       }
     },
 
     mounted(){
+      // alert(window.document.location.href.toString())
+      
       // var cookies = document.cookie.split(';')
       // if(cookies == ''){
       //   return
@@ -64,14 +65,13 @@
 </script>
 
 <style>
-#app {
+/*#app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   margin-top: 0;
-}
-
+/*}*/
 
 </style>

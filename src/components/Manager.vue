@@ -7,7 +7,7 @@
       <x-address title="地址" :list="addressData" :placeholder="addressCode"  :show.sync="showAddress" v-model="oadc" value-text-align="left"></x-address>
 
       <x-input title="地点" v-model="location"></x-input>
-     
+
     </group>
 
 
@@ -71,7 +71,6 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
           this.activityId = kv[1]
         }
       }
-
       var _this = this
       this.axios.get('http://localhost:3003/manager',{
                       params: {
@@ -81,6 +80,7 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
                     .then(function(response){
                       var form = response.data.data
                       console.log(form, '~!!')
+                      _this.activityId = form.id
                       _this.subject = form.title
                       _this.location = form.location
                       _this.datetime = form.time
@@ -104,6 +104,7 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
 
     data() {
         return {
+          activityId: '',
           subject: '',
           location: '',
           datetime: '1999-10-12 16:00',
@@ -173,6 +174,12 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
                       latitude_longitude: _this.address,
                       status: _this.status
                   }).then(function(response){
+                    if(response.data.status == '1'){
+                      alert("更新成功，跳转到活动详情页")
+                    }
+                    else if(response.data.status = '0'){
+                      alert("更新异常")
+                    }
                     console.log(_this.list, "!!!!!!!!")
                   })
                   .catch(function(error){

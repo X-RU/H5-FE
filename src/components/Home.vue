@@ -5,7 +5,7 @@
       link="/release">
       发起活动
     </x-button>
-
+<!--  -->
     <divider>我的活动</divider>
     <panel :list="list" :type="type"></panel>
   </div>
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-  import { Group, Cell, Panel, Divider, XButton } from 'vux'
+  import { Group, Cell, Panel, Divider, XButton, XHeader } from 'vux'
 
   export default {
     name: 'Home',
@@ -24,6 +24,7 @@
       Panel,
       Divider,
       XButton,
+      XHeader
     },
 
     data() {
@@ -117,51 +118,41 @@
       //     }).catch(function (error) {
       //       console.log(error);
       //     });
-      var cookies = document.cookie.split(';')
-      if(cookies == ''){
-        return
-      }
-      for(var i = 0; i < cookies.length; ++i){
-        var kv = cookies[i].split('=')
-        if(kv[0] == 'panda'){
-          this.cookieV = kv[1]
-          // alert(this.cookieV)
-          break
-        }
-      }
+      // var cookies = document.cookie.split(';')
+      // if(cookies == ''){
+      //   return
+      // }
+      // for(var i = 0; i < cookies.length; ++i){
+      //   var kv = cookies[i].split('=')
+      //   if(kv[0] == 'panda'){
+      //     this.cookieV = kv[1]
+      //     // alert(this.cookieV)
+      //     break
+      //   }
+      // }
 
-      if(this.cookieV == ''){
-        return
-      }
+      // if(this.cookieV == ''){
+      //   return
+      // }
 
       var _this = this
-      //    TODO
-      // 1. get ==> post
-      // 2. api ==> ???
-      //
-      //
-      //
-      this.axios.get('http://localhost:3003/index',{
-                      params: {
-                        token: _this.cookieV,
-                      }
-                    })
+      this.axios.get('http://localhost:3003/index')
                     .then(function(response){
                       console.log(response, 'home success');
-                      var data = response.data.list
+                      var data = response.data.data
                       _this.list = new Array([data.length])
 
                       for(var i = 0; i < data.length; ++i){
                         _this.list.push(
                             {
-                              'src': data[i].picture,
-                              'title': data[i].subject,
-                              'desc': data[i].desc,
-                              'url': '/project?pid=' + data[i].id,
+                              'src': data[i].picture_url,
+                              'title': data[i].title,
+                              'desc': data[i].description,
+                              'url': '/project/detailed/' + data[i].id,
                               'meta': {
-                                'source': data[i].address,
+                                'source': data[i].longitude,
                                 'date': data[i].location,
-                                'other': data[i].datetime
+                                'other': data[i].time
                               }
                             }
                           )
