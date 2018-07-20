@@ -8,7 +8,7 @@
         <cell title="地址" value-align="left" :value="address"></cell>
         <cell title="地点" value-align="left" :value="location"></cell>
       </group>
-      
+
       <group label-width="6em" label-margin-right="2em" label-align="right">
         <cell title="报名详情" value-align="left" :link="toMembers" is-link></cell>
         <!-- <cell title="相册" value-align="left" :link="toPhotos" is-link></cell> -->
@@ -19,8 +19,7 @@
             <cell title="管理（仅限发起人 v-if ）" value-align="left" :link="toManager" is-link v-if="isManager"></cell>
           </div>
       </group>
-      
-  
+
       <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top: 2em;" v-on:click.native="enroll" v-if="signin">报名</x-button>
 
       <x-button plain type="warn" style="border-radius:99px; width: 67%; margin-top: 2em; " v-on:click.native="_cancel" v-if="cancel">取消报名</x-button>
@@ -155,11 +154,9 @@ export default{
               _this.isManager = false
             }
 
-            
             _this.signin = false
             _this.cancel = true
-            
-            
+
         }).catch(function (error) {
           alert(error.code + ": " + error.msg)
           console.log(error);

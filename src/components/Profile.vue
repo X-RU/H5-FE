@@ -17,11 +17,16 @@
       <cell title="性别"  value-align="left" v-model="gender"></cell>
 
       <cell title="描述"  value-align="left" v-model="description"></cell>
-
       <!-- <popup-radio title="姓别" value-align="left" :options="options2" v-model="option2" placeholder="点击修改"></popup-radio> -->
 
     </group>
+
+    <group>
+      <cell title="我发起的活动"  value-align="center" link="http://localhost:8080/#/mine" is-link></cell>
+    </group>
+
     <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top:2em; margin-bottom: 2em;" v-on:click.native="publish">确认</x-button>
+    
 
   </div>
 </template>
@@ -124,6 +129,15 @@
         reader.onloadend = function(){
           _this.mySrc = this.result
         }
+        //
+        // var _this = this
+        // this.axios.get('http://101.132.181.76:3838/')
+        //             .then(function(response){
+        //               console.log(response, 'qiuniu tokne success')
+        //             })
+        //             .catch(function(error){
+        //               console.log(error, 'qiuniu token fail');
+        //             });
       },
 
     },

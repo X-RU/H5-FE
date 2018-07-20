@@ -9,7 +9,7 @@ import Manager from '@/components/Manager'
 import Photos from '@/components/Photos'
 import Profile from '@/components/Profile'
 import Members from '@/components/Members'
-
+import Mine from '@/components/Mine'
 
 Vue.use(Router)
 
@@ -56,5 +56,10 @@ export default new Router({
 			name: 'Members',
 			component: Members
 		},
+		{
+			path: '/mine',
+			name: 'Mine',
+			component: Mine
+		}
 	]
 })
