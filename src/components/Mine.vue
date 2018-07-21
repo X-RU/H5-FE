@@ -1,30 +1,24 @@
 <template>
   <div>
-    <divider>我发起的活动</divider>
     <panel :list="list" :type="type"></panel>
   </div>
 
 </template>
 
 <script>
-  import { Group, Cell, Panel, Divider, XButton, XHeader } from 'vux'
+  import { Panel } from 'vux'
 
   export default {
     name: 'Home',
 
     components: {
-      Group,
-      Cell,
-      Panel,
-      Divider,
-      XButton,
-      XHeader
+      Panel
     },
 
     data() {
       return{
         type: '5',
-        list: [ ]
+        list: []
       }
     },
 
@@ -43,7 +37,6 @@
                     .then(function(response){
                       console.log(response, 'home success');
                       var data = response.data.data
-                      _this.list = new Array([data.length])
 
                       for(var i = 0; i < data.length; ++i){
                         _this.list.push(

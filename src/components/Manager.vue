@@ -1,17 +1,11 @@
 <template>
   <div>
-    <divider style="margin-top: 1em">活动计划</divider>
     <group label-width="4.5em" label-margin-right="2em" label-align="right">
       <x-input title="主题" v-model="subject"></x-input>
       <datetime title="时间" v-model="datetime" format="YYYY-MM-DD HH:mm" :minute-list="['00', '15', '30', '45']" value-text-align="left"></datetime>
-
-      <!-- :show.sync="showAddress" -->
       <x-address title="地址" :list="addressData" :placeholder="addressCode"   v-model="oadc" value-text-align="left"></x-address>
-
       <x-input title="地点" v-model="location"></x-input>
-
     </group>
-
 
     <group>
       <popup-radio :title="statusMsg"  label-width="4.5em" label-margin-right="2em" label-align="right" :options="options2" v-model="option2" ></popup-radio>
@@ -65,7 +59,7 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
     },
 
     mounted(){
-      this.defines.setName('我创建的活动')
+      this.defines.setName('活动计划')
       var url = document.location.toString(); //获取url中"?"符后的字串
       if(url.lastIndexOf('/') != -1){
         var pid = url.substring(url.lastIndexOf('/')+1, url.length)
