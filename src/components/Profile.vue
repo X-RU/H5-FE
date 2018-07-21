@@ -11,18 +11,14 @@
         <input id="file" type="file" @change="getFile" ref="file"/>
         <label for="file" style="margin: 1em; border-style: solid; border-width: 0.1em;">选择新头像</label>
       </div>
-
       <cell style="margin-top: 1em" title="昵称" value-align="left" v-model="screen_name"></cell>
-
       <cell title="性别"  value-align="left" v-model="gender"></cell>
-
       <cell title="描述"  value-align="left" v-model="description"></cell>
       <!-- <popup-radio title="姓别" value-align="left" :options="options2" v-model="option2" placeholder="点击修改"></popup-radio> -->
-
     </group>
 
     <group>
-      <cell title="我发起的活动"  value-align="center" link="http://localhost:8080/#/mine" is-link></cell>
+      <cell title="我发起的活动"  value-align="center" link="/mine" is-link></cell>
     </group>
 
     <x-button plain type="primary" style="border-radius:99px; width: 67%; margin-top:2em; margin-bottom: 2em;" v-on:click.native="publish">确认</x-button>
@@ -72,10 +68,13 @@
         }],
 
         mySrc: 'http://owj98yrme.bkt.clouddn.com//lufei/9.jpg',
+        newFile: null,
+        newImgUrl: '',
       }
     },
 
     mounted(){
+      this.defines.setName('个人信息')
       var _this = this
       this.axios.get('http://localhost:3003/profile',{
                       params: {
@@ -104,10 +103,51 @@
         //
         //
         //
-        //
-        //
+       this.axios.get('http://101.132.181.76:3838/')
+            .then(function(response){
+              console.log(response, 'qiuniu tokne success')
+
+              var file = _this.newFile
+              var token = response.data.token
+              var key = null
+              var putExtra = {
+                fname: "",
+                params: {},
+                mimeType: null
+              }
+              var config = {
+                useCdnDomain: false,
+                region: null
+              }
+
+              var observable = qiniu.upload(file, key, token, putExtra, config)
+              console.log(observable, 'observable')
+
+              var observer = {
+                next(res){
+
+                },
+                error(err){
+                  console.log(err, 'observer error')
+                },
+                complete(res){
+                  console.log(res, 'observer complete')
+                  // reader.onloadend = function(){
+                  _this.newImgUrl = 'pc56nec9k.bkt.clouddn.com/' + res.hash
+
+                }
+              }
+
+              var subscription = observable.subscribe(observer)
+              console.log(subscription, 'subscription')
+
+            })
+            .catch(function(error){
+              console.log(error, 'qiuniu token fail');
+            });
+
         this.axios.post('',{
-                  picture_url: _this.mySrc
+                  picture_url: _this.newImgUrl
               })
               .then(function(response){
                 console.log(response)
@@ -120,6 +160,7 @@
       getFile(e){
         let _this = this;
         var file = e.target.files[0]
+        _this.newFile = file
         if(!e || !window.FileReader){
           alert("浏览器不支持上传文件或者图片文件已损坏")
           return
@@ -129,15 +170,7 @@
         reader.onloadend = function(){
           _this.mySrc = this.result
         }
-        //
-        // var _this = this
-        // this.axios.get('http://101.132.181.76:3838/')
-        //             .then(function(response){
-        //               console.log(response, 'qiuniu tokne success')
-        //             })
-        //             .catch(function(error){
-        //               console.log(error, 'qiuniu token fail');
-        //             });
+
       },
 
     },

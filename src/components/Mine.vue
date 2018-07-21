@@ -37,6 +37,7 @@
     },
 
     mounted(){
+      this.defines.setName('我发起的活动')
       var _this = this
       this.axios.get('http://localhost:3003/index')
                     .then(function(response){
@@ -52,7 +53,7 @@
                               'desc': data[i].description,
                               'url': '/project/detailed/' + data[i].id,
                               'meta': {
-                                'source': data[i].longitude,
+                                'source': data[i].latitude_longitude,
                                 'date': data[i].location,
                                 'other': data[i].time
                               }

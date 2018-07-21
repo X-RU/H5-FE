@@ -126,7 +126,7 @@
     },
 
     mounted(){
-
+      this.defines.setName('趣玩活动中心')
     }
 
   }

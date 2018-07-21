@@ -47,6 +47,7 @@
     },
 
     mounted(){
+      this.defines.setName('活动参与人员')
       var _this = this
       this.axios.get('http://localhost:3003/members',{
                       params: {

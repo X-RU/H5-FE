@@ -37,7 +37,7 @@ export default {
   },
 
   mounted(){
-
+    this.defines.setName('活动相关照片')
     var url = document.location.toString(); //获取url中"?"符后的字串
     if(url.indexOf('?') != -1){
       url = url.substring(url.indexOf('?')+1, url.length)

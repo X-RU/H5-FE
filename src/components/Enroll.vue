@@ -99,6 +99,7 @@ export default{
   },
 
   mounted(){
+    this.defines.setName('趣玩报名中心')
     //获取   ?pid=123  中的项目编号
     var url = document.location.toString(); //获取url中"?"符后的字串
     if(url.lastIndexOf('/') != -1){

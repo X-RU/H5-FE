@@ -65,6 +65,7 @@ import { GroupTitle, Group, Cell, XInput, Selector, PopupPicker, Datetime, XNumb
     },
 
     mounted(){
+      this.defines.setName('我创建的活动')
       var url = document.location.toString(); //获取url中"?"符后的字串
       if(url.lastIndexOf('/') != -1){
         var pid = url.substring(url.lastIndexOf('/')+1, url.length)

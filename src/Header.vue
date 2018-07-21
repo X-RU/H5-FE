@@ -1,7 +1,7 @@
 <template>
   <div id="header">
     <x-header :left-options="{showBack: false}">
-       {{ subject }}
+       {{ this.defines.headerName }}
 <!--       <a slot="right" href="#" style="text-decoration:none;"></a>
  -->    </x-header>
   </div>
@@ -25,6 +25,7 @@
     },
 
     mounted(){
+      this.defines.setName('小猪活动中心')
       // alert(window.document.location.href.toString())
       
       // var cookies = document.cookie.split(';')

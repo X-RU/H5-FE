@@ -20,7 +20,7 @@
       发起活动
     </x-button>
 <!--  -->
-    <divider>我的活动</divider>
+    <divider>{{ this.defines.headerName }}</divider>
     <panel :list="list" :type="type"></panel>
   </div>
 
@@ -137,6 +137,7 @@
     },
 
     mounted(){
+      this.defines.setName('趣玩活动中心')
       console.log(qiniu, '!@#$@@')
 
       // this.axios.post("http://api.komavideo.com/news/list").then(body => {
@@ -184,7 +185,7 @@
                               'desc': data[i].description,
                               'url': '/project/detailed/' + data[i].id,
                               'meta': {
-                                'source': data[i].longitude,
+                                'source': data[i].latitude_longitude,
                                 'date': data[i].location,
                                 'other': data[i].time
                               }

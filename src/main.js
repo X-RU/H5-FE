@@ -10,10 +10,13 @@ import App from './App'
 import Header from './Header'
 import Footer from './Footer'
 
+import defines from './config'
+
 Vue.use(VueAxios, axios)
 
 Vue.config.productionTip = false
 
+Vue.prototype.defines = defines
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
