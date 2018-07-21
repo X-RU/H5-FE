@@ -1,5 +1,7 @@
  panda
 
+PANDA AUTHENCAITED
+
 > A Vue.js project
 
 ## Build Setup
